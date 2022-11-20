@@ -15,7 +15,7 @@ server.config["MYSQL_DB"] = os.environ.get("MYSQL_DB")
 server.config["MYSQL_PORT"] = os.environ.get("MYSQL_PORT")
 
 
-@server.route("/login", method=["POST"])
+@server.route("/login", methods=["POST"])
 def login():
     auth = request.authorization
     if not auth:
@@ -27,7 +27,7 @@ def login():
         "SELECT email, password FROM user WHERE email=%s", (auth.username,)
     )
     if res > 0:
-        user_row = res.fetchone()
+        user_row = cur.fetchone()
         email = user_row[0]
         password = user_row[1]
 
@@ -39,7 +39,7 @@ def login():
         return "invalid credentials", 401
 
 
-@server.route("/validate", method=["POST"])
+@server.route("/validate", methods=["POST"])
 def validate():
     encoded_jwt = request.headers["Authorization"]
     if not encoded_jwt:
